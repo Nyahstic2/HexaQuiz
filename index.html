@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz de Hexadecimal</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #1e1e2f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: #2e2e3e;
+      padding: 2em;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    button {
+      padding: 0.5em 1em;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 1em;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #answers button {
+      display: block;
+      margin-top: 0.5em;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz de Números Hexadecimais</h1>
+    <div id="quiz">
+      <p id="question"></p>
+      <div id="answers"></div>
+      <button id="next-btn" class="hidden">Próxima</button>
+    </div>
+    <div id="result" class="hidden">
+      <h2>Resultado</h2>
+      <p id="score"></p>
+      <button onclick="location.reload()">Reiniciar</button>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Qual é o valor decimal de 0x1F?",
+        options: ["15", "31", "25", "30"],
+        correct: 1
+      },
+      {
+        question: "Qual hexadecimal representa o número 255?",
+        options: ["0xFF", "0xF0", "0xAA", "0x1F"],
+        correct: 0
+      },
+      {
+        question: "O que significa 0xA em decimal?",
+        options: ["5", "10", "11", "12"],
+        correct: 1
+      },
+      {
+        question: "0x3C é igual a qual decimal?",
+        options: ["60", "45", "30", "63"],
+        correct: 0
+      },
+      {
+        question: "Qual hexadecimal representa o número decimal 100?",
+        options: ["0x64", "0x66", "0x6A", "0x6F"],
+        correct: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const nextBtn = document.getElementById("next-btn");
+    const resultEl = document.getElementById("result");
+    const scoreEl = document.getElementById("score");
+
+    function showQuestion() {
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      answersEl.innerHTML = "";
+      nextBtn.classList.add("hidden");
+
+      q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => {
+          document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
+          if (index === q.correct) {
+            btn.style.background = "#4caf50";
+            score++;
+          } else {
+            btn.style.background = "#e74c3c";
+          }
+          nextBtn.classList.remove("hidden");
+        };
+        answersEl.appendChild(btn);
+      });
+    }
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    };
+
+    function showResult() {
+      document.getElementById("quiz").classList.add("hidden");
+      resultEl.classList.remove("hidden");
+      scoreEl.textContent = `Você acertou ${score} de ${quizData.length} perguntas.`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
